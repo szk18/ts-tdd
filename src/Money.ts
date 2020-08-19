@@ -1,4 +1,6 @@
-export class Money {
+import { Expression } from "./Expression";
+
+export class Money implements Expression {
   protected amount: number;
   protected curr: string;
   constructor(amount: number, currency: string) {
@@ -12,6 +14,10 @@ export class Money {
   times(multiplier: number): Money {
     return new Money(this.amount * multiplier, this.curr);
   }
+  plus(addend: Money): Expression {
+    return new Money(this.amount + addend.amount, this.curr);
+  }
+
   static dollar(amount: number): Money {
     return new Money(amount, "USD");
   }
@@ -20,17 +26,5 @@ export class Money {
   }
   currency(): string {
     return this.curr;
-  }
-}
-
-export class Dollar extends Money {
-  constructor(amount: number, currency: string) {
-    super(amount, currency);
-  }
-}
-
-export class Franc extends Money {
-  constructor(amount: number, currency: string) {
-    super(amount, currency);
   }
 }
