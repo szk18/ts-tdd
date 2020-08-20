@@ -1,5 +1,3 @@
-import { Expression } from "./Expression";
-
 export class Money implements Expression {
   protected amount: number;
   protected curr: string;
@@ -15,7 +13,11 @@ export class Money implements Expression {
     return new Money(this.amount * multiplier, this.curr);
   }
   plus(addend: Money): Expression {
-    return new Money(this.amount + addend.amount, this.curr);
+    return new Sum(this, addend);
+  }
+
+  reduce(to: string): Money {
+    return this;
   }
 
   static dollar(amount: number): Money {
@@ -26,5 +28,22 @@ export class Money implements Expression {
   }
   currency(): string {
     return this.curr;
+  }
+}
+
+export interface Expression {
+  reduce(to: string): Money;
+}
+
+export class Sum implements Expression {
+  augend: Money;
+  addend: Money;
+  constructor(augend: Money, addend: Money) {
+    this.augend = augend;
+    this.addend = addend;
+  }
+  reduce(to: string): Money {
+    const amount = this.augend.amount + this.addend.amount;
+    return new Money(amount, to);
   }
 }
